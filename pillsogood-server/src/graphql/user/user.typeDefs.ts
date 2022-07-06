@@ -4,4 +4,4 @@ export default gql`
     type Query {
         hi:String
     }
-`
+`;
