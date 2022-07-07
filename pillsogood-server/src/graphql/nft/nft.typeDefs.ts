@@ -13,7 +13,5 @@ export default gql`
 
     type Mutation {
         createNft(jwt:String!, nftHash:String!, imagePath:String!):Int!
-        updateNft(jwt:String!, _id:String!, nftHash:String!, imagePath:String!):Int!
-        deleteNft(jwt:String!, _id:String!):Int!
     }
 `

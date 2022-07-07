@@ -35,26 +35,5 @@ export default {
             if(!res) return status.SERVER_ERROR
             return status.SUCCESS
         },
-        async updateNft(_:any, args:{jwt:string, _id:string, nftHash:string, imagePath:string}) {
-            const userInfo = getUserInfoByToken(args.jwt)
-            if(!userInfo) return status.TOKEN_EXPIRED
-
-            const res = await Nft.updateOne(
-                {_id:args._id, userId:userInfo._id},
-                {nftHash:args.nftHash, imagePath:args.imagePath}
-            )
-            if(!res) return status.SERVER_ERROR
-            return status.SUCCESS
-        },
-        async deleteNft(_:any, args:{jwt:string, _id:string}) {
-            const userInfo = getUserInfoByToken(args.jwt)
-            if(!userInfo) return status.TOKEN_EXPIRED
-
-            const res = await Nft.deleteOne(
-                {_id:args._id, userId:userInfo._id}
-            )
-            if(!res) return status.SERVER_ERROR
-            return status.SUCCESS
-        }
     }
 }
