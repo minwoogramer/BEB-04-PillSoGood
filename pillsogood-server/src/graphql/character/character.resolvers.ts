@@ -2,6 +2,7 @@ import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
 
 const Character = require("../../models/character")
+const moment = require("moment")
 
 type character = {
     _id: string
@@ -31,6 +32,7 @@ export default {
             newCharacter.name = args.name
             newCharacter.level = 0
             newCharacter.userId = userInfo._id
+            newCharacter.createdAt = moment().format("YYYY-MM-DD HH:mm:ss")
 
             const res = await newCharacter.save()
             if(!res) return status.SERVER_ERROR
