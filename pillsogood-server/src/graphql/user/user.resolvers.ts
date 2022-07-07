@@ -2,7 +2,7 @@ import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
 
 const User = require("../../models/user")
-
+const moment = require("moment")
 type user = {
     _id: number
     email: string
@@ -46,7 +46,7 @@ export default {
             newUser.dateOfBirth = args.dateOfBirth
             newUser.password = encryptedPassword
             newUser.pointBalance = 0
-            newUser.createdAt = new Date().toLocaleDateString()
+            newUser.createdAt = moment().format("YYYY-MM-DD HH:mm:ss")
             const res = await newUser.save() // 저장 
             if(!res) return status.SERVER_ERROR
             return status.SUCCESS

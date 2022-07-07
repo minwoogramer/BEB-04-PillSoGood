@@ -2,6 +2,7 @@ import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
 
 const Health = require("../../models/health")
+const moment = require("moment")
 
 type health = {
     _id:string
@@ -34,7 +35,7 @@ export default {
             newHealth.hypertension = args.hypertension
             newHealth.bloodSugarLevel = args.bloodSugarLevel
             newHealth.userId = userInfo._id
-            newHealth.createdAt = new Date()
+            newHealth.createdAt = moment().format("YYYY-MM-DD HH:mm:ss")
             const res = await newHealth.save()
             if(!res) return status.SERVER_ERROR
             return status.SUCCESS
