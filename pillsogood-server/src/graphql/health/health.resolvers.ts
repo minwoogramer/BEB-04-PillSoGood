@@ -1,5 +1,6 @@
 import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
+import { createLog } from "../../utils/log"
 
 const Health = require("../../models/health")
 const moment = require("moment")
@@ -19,6 +20,9 @@ export default {
         async getHealthRecords(_:any, args:{jwt:string}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("getHealthRecords", userInfo._id)
+
             const healths = Health.find({
                 userId:userInfo._id
             })
@@ -29,6 +33,9 @@ export default {
         async createHealthRecord(_:any, args: {jwt:string, height:number, weight:number, hypertension:number, bloodSugarLevel:number}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("createHealthRecord", userInfo._id)
+
             const newHealth = new Health()
             newHealth.height = args.height
             newHealth.weight = args.weight
@@ -43,6 +50,9 @@ export default {
         async updateHealthRecord(_:any, args: {jwt:string, _id:string, height:number, weight:number, hypertension:number, bloodSugarLevel:number}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("updateHealthRecord", userInfo._id)
+
             const res = await Health.updateOne(
                 {_id:args._id, userId:userInfo._id},
                 {height:args.height, weight:args.weight, hypertension:args.hypertension, bloodSugarLevel:args.bloodSugarLevel, createdAt:new Date()}
@@ -53,6 +63,9 @@ export default {
         async deleteHealthRecord(_:any, args: {jwt:string, _id:string}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("deleteHealthRecord", userInfo._id)
+            
             const res = await Health.deleteOne(
                 {_id:args._id, userId:userInfo._id}
             )

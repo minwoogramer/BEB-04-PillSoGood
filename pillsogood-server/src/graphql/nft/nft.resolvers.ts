@@ -1,5 +1,6 @@
 import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
+import { createLog } from "../../utils/log"
 
 const Nft = require("../../models/nft")
 
@@ -15,6 +16,8 @@ export default {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
 
+            createLog("getNfts", userInfo._id)
+            
             const nfts = Nft.find({
                 userId:userInfo._id
             })
@@ -25,6 +28,8 @@ export default {
         async createNft(_:any, args:{jwt:string, nftHash:string, imagePath:string}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("createNft", userInfo._id)
 
             const newNft = new Nft()
             newNft.nftHash = args.nftHash

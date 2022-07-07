@@ -1,5 +1,6 @@
 import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
+import { createLog } from "../../utils/log"
 
 const User = require("../../models/user")
 const moment = require("moment")
@@ -25,6 +26,9 @@ export default {
         async getUserInfo(_:any, args:{jwt:string}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("getUserInfo", userInfo._id)
+
             const user = User.findOne({
                 _id:userInfo._id
             })
@@ -60,6 +64,9 @@ export default {
                 email:args.email, password:encryptedPassword
             });
             if(!loginUser) return status.WRONG_USER_INFO
+
+            createLog("login", loginUser._id)
+
             const jwt = require('jsonwebtoken')
             const accessToken = jwt.sign(
               {

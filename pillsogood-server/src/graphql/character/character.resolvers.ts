@@ -1,5 +1,6 @@
 import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
+import { createLog } from "../../utils/log"
 
 const Character = require("../../models/character")
 const moment = require("moment")
@@ -16,6 +17,8 @@ export default {
         async getCharacters(_:any, args:{jwt:string}){
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+            
+            createLog("getCharacters", userInfo._id)
 
             const characters = Character.find({
                 userId:userInfo._id
@@ -27,6 +30,8 @@ export default {
         async createCharacter(_:any, args:{jwt:string, name:string}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("createCharacter", userInfo._id)
 
             const newCharacter = new Character()
             newCharacter.name = args.name
@@ -42,6 +47,8 @@ export default {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
 
+            createLog("updateCharacter", userInfo._id)
+
             const res = await Character.updateOne(
                 {_id:args._id, userId:userInfo._id},
                 {name:args.name, level:args.level}
@@ -53,6 +60,8 @@ export default {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
 
+            createLog("deleteCharacter", userInfo._id)
+            
             const res = await Character.deleteOne(
                 {_id:args._id, userId:userInfo._id}
             )
