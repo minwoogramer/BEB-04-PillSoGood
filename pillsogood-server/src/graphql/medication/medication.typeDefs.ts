@@ -11,7 +11,7 @@ export default gql`
         getMedicationRecords(jwt:String!):[Medication]
     }
     type Mutation {
-        createMedicationRecord(jwt:String!, medicine:Int!, condition:String!):Int!
+        createMedicationRecord(jwt:String!, medicine:String!, condition:String!):Int!
         updateMedicationRecord(jwt:String!, _id:String!, medicine:String!, condition:String!):Int!
         deleteMedicationRecord(jwt:String!, _id:String!):Int!
     }
