@@ -2,10 +2,6 @@ import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
 
 const User = require("../../models/user")
-
-<<<<<<< HEAD
- 
-=======
 type user = {
     _id: number
     email: string
@@ -79,4 +75,4 @@ export default {
         }
     }
 }
->>>>>>> c544f86fa446db1a5560b99fd4850d39cb7e3b42
+
