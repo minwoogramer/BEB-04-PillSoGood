@@ -1,7 +1,9 @@
 import { getUserInfoByToken } from "../../utils/jwt"
 import { status } from "../../constants/code"
+import { createLog } from "../../utils/log"
 
 const User = require("../../models/user")
+const moment = require("moment")
 type user = {
     _id: number
     email: string
@@ -24,6 +26,9 @@ export default {
         async getUserInfo(_:any, args:{jwt:string}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
+
+            createLog("getUserInfo", userInfo._id)
+
             const user = User.findOne({
                 _id:userInfo._id
             })
@@ -45,7 +50,7 @@ export default {
             newUser.dateOfBirth = args.dateOfBirth
             newUser.password = encryptedPassword
             newUser.pointBalance = 0
-            newUser.createdAt = new Date().toLocaleDateString()
+            newUser.createdAt = moment().format("YYYY-MM-DD HH:mm:ss")
             const res = await newUser.save() // 저장 
             if(!res) return status.SERVER_ERROR
             return status.SUCCESS
@@ -59,6 +64,9 @@ export default {
                 email:args.email, password:encryptedPassword
             });
             if(!loginUser) return status.WRONG_USER_INFO
+
+            createLog("login", loginUser._id)
+
             const jwt = require('jsonwebtoken')
             const accessToken = jwt.sign(
               {
