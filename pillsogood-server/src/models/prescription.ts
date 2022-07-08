@@ -3,9 +3,9 @@ import { model, Schema, Types } from 'mongoose';
 const prescription = new Schema({
     jwt : String,
     medicine : String,
-    alert_time : String,
+    alertTime : String,
     hospital : String,
-    last_medication_count : String, // String형인지 Number형인지?
+    lastMedicationCount : String, // String형인지 Number형인지?
     createdAt: String
 })
 

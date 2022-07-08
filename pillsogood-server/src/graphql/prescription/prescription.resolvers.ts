@@ -8,9 +8,9 @@ const moment = require("moment")
 type prescription = {
     _id:String,
         medicine:String,
-        alert_time:String,
+        alertTime:String,
         hospital:String,
-        last_medication_count:Number,
+        lastMedicationCount:Number,
         createdAt:String,
         userId:string
 }
@@ -33,9 +33,9 @@ export default {
         async createPrescriptionRecord(_:any, args: 
             {jwt:string, 
             medicine:String, 
-            alert_time:String, 
+            alertTime:String, 
             hospital:String, 
-            last_medication_count:Number}) {
+            lastMedicationCount:Number}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
 
@@ -44,9 +44,9 @@ export default {
             const newPrescription = new Prescription()
 
             newPrescription.medicine = args.medicine
-            newPrescription.alert_time = args.alert_time
+            newPrescription.alertTime = args.alertTime
             newPrescription.hospital = args.hospital
-            newPrescription.last_medication_count = args.last_medication_count
+            newPrescription.lastMedicationCount = args.lastMedicationCount
             newPrescription.createdAt =  moment().format("YYYY-MM-DD HH:mm:ss")
             newPrescription.userId = userInfo._id
             
@@ -58,9 +58,9 @@ export default {
             {jwt:string, 
             _id:string, 
             medicine:String,
-            alert_time:String,
+            alertTime:String,
             hospital:String,
-            last_medication_count:Number}) {
+            lastMedicationCount:Number}) {
             const userInfo = getUserInfoByToken(args.jwt)
             if(!userInfo) return status.TOKEN_EXPIRED
 
@@ -69,9 +69,9 @@ export default {
             const res = await Prescription.updateOne(
                 {_id:args._id, userId:userInfo._id},
                 {medicine:args.medicine, 
-                 alert_time:args.alert_time, 
+                 alertTime:args.alertTime, 
                  hospital:args.hospital, 
-                 last_medication_count:args.last_medication_count,
+                 lastMedicationCount:args.lastMedicationCount,
                  createdAt:new Date()})
             if(!res) return status.SERVER_ERROR
             return status.SUCCESS
