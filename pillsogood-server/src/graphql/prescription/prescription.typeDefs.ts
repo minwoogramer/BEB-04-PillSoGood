@@ -4,17 +4,17 @@ export default gql`
     type Prescription {
         _id:String,
         medicine:String,
-        alert_time:String,
+        alertTime:String,
         hospital:String,
-        last_medication_count:Int,
+        lastMedicationCount:Int,
         createdAt:String
     }
     type Query {
         getPrescriptionRecords(jwt:String!):[Prescription]
     }
     type Mutation {
-        createPrescriptionRecord(jwt:String!, medicine:String!, alert_time:String!, hospital:String!, last_medication_count:Int!):Int!
-        updatePrescriptionRecord(jwt:String!, _id:String!, medicine:String!, alert_time:String!, hospital:String!, last_medication_count:Int!):Int!
+        createPrescriptionRecord(jwt:String!, medicine:String!, alertTime:String!, hospital:String!, lastMedicationCount:Int!):Int!
+        updatePrescriptionRecord(jwt:String!, _id:String!, medicine:String!, alertTime:String!, hospital:String!, lastMedicationCount:Int!):Int!
         deletePrescriptionRecord(jwt:String!, _id:String!):Int!
     }
 `;
