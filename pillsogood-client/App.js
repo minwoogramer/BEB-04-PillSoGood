@@ -1,21 +1,25 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-
+import React, { useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import auth from "@react-native-firebase/auth";
+import OutNav from "./navigators/OutNav";
+import InNav from "./navigators/InNav";
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    auth().onAuthStateChanged((user) => {
+      //인증상태감지
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+    console.log(auth().currentUser);
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>안녕하세요</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      {isLoggedIn ? <InNav /> : <OutNav />}
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
