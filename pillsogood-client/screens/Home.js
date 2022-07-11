@@ -8,5 +8,4 @@ const Home = () => (
     <Text>Home</Text>
   </Container>
 );
-
 export default Home;
