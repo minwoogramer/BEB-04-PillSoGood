@@ -11,6 +11,7 @@
     "@graphql-tools/merge": "^8.2.14",
     "@graphql-tools/schema": "^8.3.14",
     "aes256": "^1.1.0",
+    "agenda": "^4.3.0",
     "apollo-server-express": "^3.9.0",
     "compression": "^1.7.4",
     "dotenv": "^16.0.1",

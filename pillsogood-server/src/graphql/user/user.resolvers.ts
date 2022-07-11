@@ -12,6 +12,7 @@ type user = {
     dateOfBirth: string
     pointBalance: number
     createdAt: string
+    PhoneNumber: String
 }
 
 type token = {
@@ -36,7 +37,7 @@ export default {
         }
     },
     Mutation: {
-        async join(_:any, args: {nickname:string, email:string, dateOfBirth:string, password:string}) {
+        async join(_:any, args: {nickname:string, email:string, dateOfBirth:string, password:string,  PhoneNumber:String}) {
             const crypto = require('crypto');
             const encryptedPassword = crypto.createHmac('sha256', process.env.PASSWORD_SECRET).update(args.password).digest('hex');
             const savedUser = await User.findOne({
@@ -51,6 +52,7 @@ export default {
             newUser.password = encryptedPassword
             newUser.pointBalance = 0
             newUser.createdAt = moment().format("YYYY-MM-DD HH:mm:ss")
+            newUser.PhoneNumber = args.PhoneNumber
             const res = await newUser.save() // 저장 
             if(!res) return status.SERVER_ERROR
             return status.SUCCESS
