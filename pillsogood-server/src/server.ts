@@ -5,6 +5,8 @@ import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { resolvers, typeDefs } from "./graphql/schema";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import Agenda from "agenda"; // 주기적 알람 위한 Agenda 
+
 dotenv.config();
 
 const PILL_SO_GOOD_SERVER_PORT = 4000;
@@ -19,6 +21,25 @@ const apolloServer = new ApolloServer({
   cache: "bounded",
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
+
+
+function Alarm() { // Agenda 이용한 반복 알람 
+  const agenda = new Agenda({ 
+    db: { address: MongoDB_URL},
+    name: "vote deadline queue"
+});
+
+agenda.define("push", function (job, done) {
+  console.log("agenda sample" + JSON.stringify(job.attrs.data))
+  done()
+})
+
+agenda.on('ready', () => {
+  agenda.every("3 seconds", "push", { by: "chris" });
+  agenda.start();
+});}
+
+
 
 async function initApolloServer() {
   
@@ -38,6 +59,7 @@ async function initApolloServer() {
   console.log(
     `🚀 Server ready at http://localhost:${PILL_SO_GOOD_SERVER_PORT}${apolloServer.graphqlPath}`
   );
+
 }
 
 void initApolloServer();

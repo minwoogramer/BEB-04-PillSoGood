@@ -8,7 +8,8 @@ export default gql`
         nickname:String,
         dateOfBirth:String,
         pointBalance:Int,
-        createdAt:String
+        createdAt:String,
+        PhoneNumber:String
     }
 
     type Token {
@@ -21,7 +22,7 @@ export default gql`
     }
 
     type Mutation {
-        join(nickname:String!, email:String!, dateOfBirth:String!, password:String):Int!
+        join(nickname:String!, email:String!, dateOfBirth:String!, password:String,  PhoneNumber:String):Int!
         login(email:String!, password:String!):Token!
     }
 `;
