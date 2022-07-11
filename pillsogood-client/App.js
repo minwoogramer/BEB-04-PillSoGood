@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { ApolloProvider } from "@apollo/client";
+import client from "./apolloClient";
 import auth from "@react-native-firebase/auth";
 import OutNav from "./navigators/OutNav";
 import InNav from "./navigators/InNav";
@@ -18,8 +20,10 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      {isLoggedIn ? <InNav /> : <OutNav />}
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        {isLoggedIn ? <InNav /> : <OutNav />}
+      </NavigationContainer>
+    </ApolloProvider>
   );
 }
