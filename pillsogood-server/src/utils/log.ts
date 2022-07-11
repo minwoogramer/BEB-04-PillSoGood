@@ -5,6 +5,6 @@ export async function createLog(methodName:string, userId:string) {
     const newLog = new Log()
     newLog.methodName = methodName
     newLog.userId = userId
-    newLog.createdAt = moment().format("YYYY-MM-DD HH:mm:ss")
+    newLog.createdAt = parseInt(moment().format("YYYYMMDD"))
     await newLog.save()
 }
