@@ -5,6 +5,8 @@ import client from "./apolloClient";
 import auth from "@react-native-firebase/auth";
 import OutNav from "./navigators/OutNav";
 import InNav from "./navigators/InNav";
+import { Provider } from "react-redux";
+import { store } from "./src/store";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -21,9 +23,11 @@ export default function App() {
 
   return (
     <ApolloProvider client={client}>
-      <NavigationContainer>
-        {isLoggedIn ? <InNav /> : <OutNav />}
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          {isLoggedIn ? <InNav /> : <OutNav />}
+        </NavigationContainer>
+      </Provider>
     </ApolloProvider>
   );
 }
