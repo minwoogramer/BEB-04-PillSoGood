@@ -1,16 +1,17 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components/native";
-import { TextInput } from "react-native";
 import { ActivityIndicator, Alert } from "react-native";
 import { BASE_COLOR } from "../colors";
-import Multiselect from "./../src/utils/Multiselect";
-
+import Multiselect from "../src/utils/Multiselect";
+import DateTime from "../src/utils/DateTime";
+import { useMutation } from "@apollo/client";
+import { SIGN_UP } from "../src/query/MutationQuery";
 const Container = styled.View`
   background-color: ${BASE_COLOR};
   flex: 1;
   align-items: center;
   color: black;
-  padding: 60px 20px;
+  padding: 30px 20px;
 `;
 const TextInputs = styled.TextInput`
   width: 100%;
@@ -20,7 +21,7 @@ const TextInputs = styled.TextInput`
   margin-bottom: 10px;
   font-size: 16px;
   color: black;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #ffffff7f;
 `;
 const Btn = styled.TouchableOpacity`
   margin-top: 50px;
@@ -39,18 +40,26 @@ const BtnText = styled.Text`
   font-size: 16px;
 `;
 const Register = () => {
-  const passwordInput = useRef();
+  // const user = useSelector((state) => state.user.value)
+  const passwordInput: any = useRef();
+  const emailInput: any = useRef();
+  const passwordCheckInput: any = useRef();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [birth, setBirth] = useState("");
-
-  const [loading, setLoading] = useState(false);
-
-  const onSubmitEmailEditing = () => {
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [birth, setBirth] = useState({});
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [value, setValue] = useState([]);
+  const [Signup, { data, loading, error }] = useMutation(SIGN_UP);
+  const onSubmitEmailEditing: any = () => {
+    emailInput.current.focus(); //유저가 입력이 끝나면 다음칸으로가게함
+  };
+  const onSubmitPasswordEditing: any = () => {
     passwordInput.current.focus();
-
-    console.log("focus password");
+  };
+  const onSubmitPasswordCheckEditing: any = () => {
+    passwordCheckInput.current.focus();
   };
   const onSubmit = async () => {
     if (email === "" || password === "" || name === "" || birth === "") {
@@ -59,11 +68,20 @@ const Register = () => {
     if (loading) {
       return;
     }
-    setLoading(true);
     try {
+      Signup({
+        variables: {
+          nickname: name,
+          email: email,
+          dateOfBirth: birth,
+          password: password,
+          phoneNumber: phoneNumber,
+          value: value,
+        },
+      });
     } catch (e) {
       switch (e.code) {
-        case "auth/weak-password": {
+        case password.length < 4: {
           Alert.alert("Write a stronger password!");
         }
       }
@@ -75,7 +93,7 @@ const Register = () => {
         placeholder="닉네임"
         autoCapitalize="none"
         autoCorrect={false}
-        keyboardType="email-address"
+        keyboardType="default"
         value={name}
         returnKeyType="next"
         onChangeText={(text) => setName(text)}
@@ -83,6 +101,7 @@ const Register = () => {
         placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
       />
       <TextInputs
+        ref={emailInput}
         placeholder="Email"
         autoCapitalize="none"
         autoCorrect={false}
@@ -90,7 +109,7 @@ const Register = () => {
         value={email}
         returnKeyType="next"
         onChangeText={(text) => setEmail(text)}
-        onSubmitEditing={onSubmitEmailEditing}
+        onSubmitEditing={onSubmitPasswordEditing}
         placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
       />
       <TextInputs
@@ -98,18 +117,33 @@ const Register = () => {
         placeholder="Password"
         secureTextEntry
         value={password}
-        returnKeyType="done"
+        returnKeyType="next"
         onChangeText={(text) => setPassword(text)}
+        onSubmitEditing={onSubmitPasswordCheckEditing}
         placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
       />
       <TextInputs
-        placeholder="Birthday"
-        value={birth}
-        returnKeyType="done"
-        onChangeText={(text) => setBirth(text)}
+        ref={passwordCheckInput}
+        placeholder="PasswordCheck"
+        secureTextEntry
+        value={passwordCheck}
+        returnKeyType="next"
+        onChangeText={(text) => setPasswordCheck(text)}
         placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
       />
-      <Multiselect />
+      <TextInputs
+        placeholder="PhoneNumber"
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="default"
+        value={phoneNumber}
+        returnKeyType="done"
+        onChangeText={(text) => setPhoneNumber(text)}
+        placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
+      />
+
+      <DateTime value={birth} setValue={setBirth} />
+      <Multiselect value={value} setValue={setValue} />
       <Btn onPress={onSubmit}>
         {loading ? (
           <ActivityIndicator color="white" />
