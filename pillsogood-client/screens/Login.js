@@ -1,7 +1,10 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components/native";
 import { BASE_COLOR } from "../colors";
-
+import { useMutation } from "@apollo/client";
+import { LOGIN } from "../src/query/MutationQuery";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "react-native";
 const Container = styled.View`
   background-color: ${BASE_COLOR};
   flex: 1;
@@ -55,31 +58,36 @@ const BtnTxt = styled.Text`
 `;
 
 const Login = ({ navigation: { navigate } }) => {
+  let state = useSelector((state) => state.login); //redux store의 state꺼내는법
+  //참고사항 state= store안에 있는 모든 state
+  console.log(state.user); //obj자료형에서 꺼내는방법
+  // let dispatch = useDispatch(); //store.js로 요청 보내주는 함수
+  //dispatch(addUser())
   const passwordInput = useRef();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [login, { data, loading, error }] = useMutation(LOGIN);
+
+  const handleClick = () => {
+    login({
+      variables: {
+        email: email,
+        password: password,
+      },
+    });
+    if (email === "" || password === "") {
+      return Alert.alert("Fill in the form.");
+    }
+    if (loading) return "로그인중...";
+    if (error) return `로그인 에러발생! ${error.message}`;
+  };
+
   const onSubmitEmailEditing = () => {
     passwordInput.current.focus();
 
     console.log("focus password");
   };
-  const onSubmitPasswordEditing = async () => {
-    if (email === "" || password === "") {
-      return Alert.alert("Fill in the form.");
-    }
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    try {
-    } catch (e) {
-      switch (e.code) {
-        case "auth/weak-password": {
-          Alert.alert("Write a stronger password!");
-        }
-      }
-    }
-  };
+
   return (
     <Container>
       <TextInputs
@@ -109,7 +117,7 @@ const Login = ({ navigation: { navigate } }) => {
         </Btn>
       </Wrapper>
       <LoginBtn>
-        <BtnText>로그인!</BtnText>
+        <BtnText onPress={() => handleClick()}>로그인!</BtnText>
       </LoginBtn>
     </Container>
   );
