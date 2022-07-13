@@ -1,77 +1,124 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { format } from "date-fns";
-import ko from "date-fns/esm/locale/ko/index.js";
+import { View, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { BASE_COLOR } from "./../../colors";
+Date.prototype.format = function (f) {
+  if (!this.valueOf()) return " ";
 
-const styles = StyleSheet.create({
-  center: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: -1,
-    flexDirection: "row",
-  },
-  separator: {
-    width: 3,
-  },
-});
-function DateTimePickerModalSample() {
-  // useState Hook를 사용하여 날짜와 모달 유형, 노출 여부를 설정할 변수를 생성
-  const [date, onChangeDate] = useState(new Date()); // 선택 날짜
-  const [mode, setMode] = useState("date"); // 모달 유형
-  const [visible, setVisible] = useState(false); // 모달 노출 여부
+  var weekName = [
+    "일요일",
+    "월요일",
+    "화요일",
+    "수요일",
+    "목요일",
+    "금요일",
+    "토요일",
+  ];
+  var d = this;
 
-  const onPressDate = () => {
-    // 날짜 클릭 시
-    setMode("date"); // 모달 유형을 date로 변경
-    setVisible(true); // 모달 open
+  return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function ($1) {
+    switch ($1) {
+      case "yyyy":
+        return d.getFullYear();
+      case "yy":
+        return (d.getFullYear() % 1000).zf(2);
+      case "MM":
+        return (d.getMonth() + 1).zf(2);
+      case "dd":
+        return d.getDate().zf(2);
+      case "E":
+        return weekName[d.getDay()];
+      case "HH":
+        return d.getHours().zf(2);
+      case "hh":
+        return ((h = d.getHours() % 12) ? h : 12).zf(2);
+      case "mm":
+        return d.getMinutes().zf(2);
+      case "ss":
+        return d.getSeconds().zf(2);
+      case "a/p":
+        return d.getHours() < 12 ? "오전" : "오후";
+      default:
+        return $1;
+    }
+  });
+};
+
+String.prototype.string = function (len) {
+  var s = "",
+    i = 0;
+  while (i++ < len) {
+    s += this;
+  }
+  return s;
+};
+String.prototype.zf = function (len) {
+  return "0".string(len - this.length) + this;
+};
+Number.prototype.zf = function (len) {
+  return this.toString().zf(len);
+};
+
+export default function DateTime({ value, setValue }) {
+  const placeholder = "생년월일을 입력해주세요";
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [text, onChangeText] = useState("");
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
 
-  const onPressTime = () => {
-    // 시간 클릭 시
-    setMode("time"); // 모달 유형을 time으로 변경
-    setVisible(true); // 모달 open
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
   };
 
-  const onConfirm = (selectedDate) => {
-    // 날짜 또는 시간 선택 시
-    setVisible(false); // 모달 close
-    onChangeDate(selectedDate); // 선택한 날짜 변경
-  };
-
-  const onCancel = () => {
-    // 취소 시
-    setVisible(false); // 모달 close
+  const handleConfirm = (date) => {
+    console.warn("dateFormat: ", date.format("yyyy/MM/dd"));
+    hideDatePicker();
+    onChangeText(date.format("yyyy/MM/dd"));
   };
 
   return (
-    <View>
-      <View style={styles.center}>
-        <Pressable onPress={onPressDate}>
-          {" "}
-          {/* 날짜 선택 영역 */}
-          <Text>{format(new Date(date), "PPP", { locale: ko })} </Text>
-        </Pressable>
-        <View style={styles.separator} />
-        <Pressable onPress={onPressTime}>
-          {" "}
-          {/* 시간 선택 영역 */}
-          <Text>{format(new Date(date), "p", { locale: ko })}</Text>
-        </Pressable>
-      </View>
-      <DateTimePickerModal
-        isVisible={visible}
-        mode={mode}
-        onConfirm={onConfirm}
-        onCancel={onCancel}
-        date={date}
-      />
+    <View style={styles.container}>
+      <TouchableOpacity onPress={showDatePicker}>
+        <TextInput
+          pointerEvents="none"
+          style={styles.textInput}
+          placeholder={placeholder}
+          placeholderTextColor="gray"
+          underlineColorAndroid="transparent"
+          editable={false}
+          value={text}
+        />
+        <DateTimePickerModal
+          headerTextIOS={placeholder}
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+      </TouchableOpacity>
     </View>
   );
 }
-export default DateTimePickerModalSample;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: `${BASE_COLOR}`,
+    marginTop: 0,
+  },
+  textInput: {
+    backgroundColor: "#ffffff7f",
+    fontSize: 16,
+    color: "#000000",
+    height: 50,
+    width: 370,
+    borderColor: "white",
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 10,
+  },
+});
