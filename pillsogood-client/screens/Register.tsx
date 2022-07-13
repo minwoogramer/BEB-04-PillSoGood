@@ -24,7 +24,7 @@ const TextInputs = styled.TextInput`
   background-color: #ffffff7f;
 `;
 const Btn = styled.TouchableOpacity`
-  margin-top: 50px;
+  margin-top: 0px;
   width: 60%;
   padding: 20px 20px;
   border-width: 1px;
@@ -83,6 +83,11 @@ const Register = () => {
       switch (e.code) {
         case password.length < 4: {
           Alert.alert("Write a stronger password!");
+        }
+      }
+      switch (e.code) {
+        case password !== passwordCheck: {
+          Alert.alert("비밀번호가 다릅니다!");
         }
       }
     }

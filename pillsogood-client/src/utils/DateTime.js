@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: `${BASE_COLOR}`,
-    marginTop: 0,
+    marginTop: 20,
   },
   textInput: {
     backgroundColor: "#ffffff7f",

@@ -17,9 +17,10 @@ function Multiselect({ value, setValue }: any) {
       <DropDownPicker
         style={{
           borderColor: "white",
-
           backgroundColor: "rgba(255, 255, 255, 0.7)",
+          marginVertical: 22,
         }}
+        containerStyle={{}}
         dropDownContainerStyle={{
           backgroundColor: "rgba(255, 255, 255, 0.87)",
         }}
@@ -27,7 +28,7 @@ function Multiselect({ value, setValue }: any) {
           color: "grey",
           fontWeight: "bold",
         }}
-        dropDownDirection={"BOTTOM"}
+        dropDownDirection={"TOP"}
         showTickIcon={false}
         showArrowIcon={true}
         placeholder="질환을 선택해주세요"
@@ -35,6 +36,8 @@ function Multiselect({ value, setValue }: any) {
         min={0}
         max={3}
         open={open}
+        mode="BADGE"
+        badgeDotColors={["#e76f51", "#00b4d8", "#8ac926"]}
         value={value}
         items={items}
         setOpen={setOpen}
